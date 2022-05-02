@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 22:23:16
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 01:41:09
+ * @LastEditTime: 2022-05-02 17:19:01
  */
 
 // 创建漫步博客数据库 man_bu_blog
@@ -36,6 +36,9 @@ const blog = `CREATE TABLE blog (
   blog_tags varchar(100) NOT NULL COMMENT '博客标签',
   blog_content varchar(2048) NOT NULL COMMENT '博客内容',
   publish_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
+  like_count smallint(6) NOT NULL COMMENT '点赞数量',
+  comment_count smallint(6) NOT NULL COMMENT '评论数量',
+  thumbnail varchar(2048) NOT NULL COMMENT '缩略图',
   isDelete tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除',
   PRIMARY KEY (blog_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='博客表';`;

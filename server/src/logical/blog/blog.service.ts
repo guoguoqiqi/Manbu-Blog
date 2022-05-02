@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 01:13:38
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 14:24:32
+ * @LastEditTime: 2022-05-02 17:20:48
  */
 import { Injectable } from '@nestjs/common';
 import * as Sequelize from 'sequelize';
@@ -57,9 +57,11 @@ export class BlogService {
    * @param body
    */
   async publishBlog(body: BlogBodyDto): Promise<any | undefined> {
-    const { username, blog_title, blog_tags, blog_content } = body;
+    const { username, blog_title, blog_tags, blog_content, thumbnail } = body;
     const publish_time = Moment().format('YYYY-MM-DD HH:mm:ss');
     const read_count = 0;
+    const like_count = 0;
+    const comment_count = 0;
     const isDelete = 0;
 
     const publishBlogSql = `
@@ -71,6 +73,9 @@ export class BlogService {
           blog_tags,
           blog_content,
           publish_time,
+          like_count,
+          comment_count,
+          thumbnail,
           isDelete
         )
       VALUES
@@ -81,6 +86,9 @@ export class BlogService {
           '${blog_tags}',
           '${blog_content}',
           '${publish_time}',
+          '${like_count}',
+          '${comment_count}',
+          '${thumbnail}',
           '${isDelete}'
         );
     `;
