@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 21:30:11
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 17:51:06
+ * @LastEditTime: 2022-05-03 22:06:05
  */
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -23,13 +23,23 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ["ant-design-vue/dist/antd.css", "~assets/less/index.less"],
+  css: [
+    "ant-design-vue/dist/antd.css",
+    "element-ui/lib/theme-chalk/index.css",
+    "~assets/less/index.less",
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     "@/plugins/antd-ui",
+    "~/plugins/axios",
+    "~/plugins/mixins",
     {
       src: "~/plugins/router",
+      ssr: false,
+    },
+    {
+      src: "~/plugins//vueMarkdown.js",
       ssr: false,
     },
   ],
@@ -41,7 +51,11 @@ export default {
   buildModules: [],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/style-resources"],
+  modules: [
+    "@nuxtjs/style-resources",
+    "@nuxtjs/axios",
+    "cookie-universal-nuxt",
+  ],
   styleResources: {
     sass: [],
     scss: [],

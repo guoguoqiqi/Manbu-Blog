@@ -4,13 +4,19 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 21:30:11
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 17:58:28
+ * @LastEditTime: 2022-05-03 18:41:24
 -->
 <template>
   <div class="container">
-    <div class="article-box">
-      <article-list :list="articleList"></article-list>
-      <custom-page :current="current" :total="total"></custom-page>
+    <div class="content-main">
+      <div class="article-box">
+        <article-list :list="articleList" :loading="loading"></article-list>
+      </div>
+      <custom-page
+        :current="current"
+        :total="total"
+        @pageChange="onPageChange"
+      ></custom-page>
     </div>
     <div class="right-slide">2222</div>
   </div>
@@ -19,18 +25,47 @@
 <script>
 import ArticleList from "../components/ArticleList.vue";
 import CustomPage from "../components/CustomPage.vue";
+
 export default {
   name: "IndexPage",
   components: {
     ArticleList,
     CustomPage,
   },
-  data() {
+  async asyncData(ctx) {
+    const [article] = await Promise.all([
+      ctx.$api.getArticleList("", {
+        pageIndex: 1,
+        pageSize: 10,
+      }),
+    ]);
     return {
-      articleList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      articleList: article.rows,
+      total: article.total,
       current: 1,
-      total: 50,
+      loading: false,
     };
+  },
+  methods: {
+    async onPageChange({ page, size }) {
+      this.loading = true;
+      const article = await this.$api.getArticleList("", {
+        pageIndex: page,
+        pageSize: size,
+      });
+
+      this.articleList = article.rows;
+      this.total = article.total;
+      this.current = page;
+
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
+
+      document.body.scrollIntoView({
+        behavior: "auto",
+      });
+    },
   },
 };
 </script>
@@ -42,10 +77,14 @@ export default {
   display: flex;
   justify-content: space-between;
 
-  & .article-box {
+  & .content-main {
     width: 730px;
     background-color: #fff;
     padding: 5px 15px;
+
+    & .article-box {
+      min-height: 800px;
+    }
   }
 
   & .right-slide {

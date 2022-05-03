@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 15:07:42
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 17:28:51
+ * @LastEditTime: 2022-05-03 22:58:21
 -->
 <template>
   <div class="app-layout-header">
@@ -49,19 +49,69 @@
       />
     </div>
     <div class="role">
-      <a-button type="primary" icon="edit"> 写文章 </a-button>
-      <img
-        src="https://p3-passport.byteacctimg.com/img/user-avatar/9725017ddc59d2209b92991f5931fbe0~300x300.image"
-        alt=""
-      />
+      <a-button type="primary" icon="edit" @click="writeArticle">
+        写文章
+      </a-button>
+      <a-button type="primary" ghost @click="handleLogin" v-if="!isLogin">
+        登录
+      </a-button>
+      <a-dropdown v-else :trigger="['click']">
+        <img
+          src="https://p3-passport.byteacctimg.com/img/user-avatar/9725017ddc59d2209b92991f5931fbe0~300x300.image"
+          alt=""
+          style="cursor: pointer"
+        />
+        <a-menu slot="overlay" @click="onAuthMenuClick">
+          <a-menu-item key="self">
+            <span>个人中心</span>
+          </a-menu-item>
+          <a-menu-item key="signout">
+            <span>退出登录</span>
+          </a-menu-item>
+        </a-menu>
+      </a-dropdown>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { MessageBox } from "element-ui";
+
 export default {
+  computed: mapState({
+    isLogin: (state) => state.auth.token !== "",
+  }),
   methods: {
     onSearch() {},
+    writeArticle() {
+      if (!this.isLogin) {
+        this.handleLogin();
+      } else {
+        this.$router.push("/editor");
+      }
+    },
+    handleLogin() {
+      this.$store.commit("metaView/SET_LOGIN_VISIBLE", true);
+    },
+    onAuthMenuClick({ key }) {
+      if (key === "self") {
+        console.log("个人中心");
+      } else if (key === "signout") {
+        MessageBox.confirm("退出登录后无法发表文章,是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            this.$cookies.remove("TOKEN");
+            this.$cookies.remove("USERINFO");
+            this.$store.commit("auth/SET_TOKEN", "");
+            this.$store.commit("auth/SET_USERINFO", null);
+          })
+          .catch(() => {});
+      }
+    },
   },
 };
 </script>
