@@ -4,13 +4,16 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 21:00:35
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 22:44:24
+ * @LastEditTime: 2022-05-03 23:20:05
  */
 // 导入暴漏出来的api
 import apiEntire from "@/api";
 import { message } from "ant-design-vue";
 export default ({ app, $axios, store, redirect }, inject) => {
-  $axios.defaults.baseURL = "http://localhost:5500/manbu-blog-v1";
+  $axios.defaults.baseURL =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:5002/manbu-blog-v1"
+      : "http://106.55.228.251:5002/manbu-blog-v1";
   $axios.defaults.timeout = 5000;
 
   // 请求拦截
