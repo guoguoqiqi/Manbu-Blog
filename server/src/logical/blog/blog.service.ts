@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 01:13:38
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 17:20:48
+ * @LastEditTime: 2022-05-03 15:58:01
  */
 import { Injectable } from '@nestjs/common';
 import * as Sequelize from 'sequelize';
@@ -26,13 +26,23 @@ export class BlogService {
   async getBlogList(query: BlogPageDto): Promise<any | undefined> {
     const { pageIndex, pageSize } = query;
 
+    const getBlogTotalSql = `
+     SELECT count(*) from blog WHERE isDelete = '0';
+    `;
+
     const getBlogListSql = `
-      SELECT * from blog WHERE isDelete = '0' limit ${
+      SELECT * from blog WHERE isDelete = '0' order by publish_time desc limit ${
         (pageIndex - 1) * pageSize
       },${pageSize} ; 
     `;
 
     try {
+      const blogTotal = await sequelize.query(getBlogTotalSql, {
+        type: Sequelize.QueryTypes.SELECT, // 查询方式
+        raw: false, // 是否使用数组组装的方式展示结果
+        logging: true, // 是否将 SQL 语句打印到控制台
+      });
+
       const blogList = await sequelize.query(getBlogListSql, {
         type: Sequelize.QueryTypes.SELECT, // 查询方式
         raw: false, // 是否使用数组组装的方式展示结果
@@ -40,7 +50,8 @@ export class BlogService {
       });
       return {
         result: '1',
-        row: blogList,
+        rows: blogList,
+        total: blogTotal[0]['count(*)'],
         msg: '查询成功',
       };
     } catch (error) {
@@ -57,7 +68,14 @@ export class BlogService {
    * @param body
    */
   async publishBlog(body: BlogBodyDto): Promise<any | undefined> {
-    const { username, blog_title, blog_tags, blog_content, thumbnail } = body;
+    const {
+      username,
+      blog_title,
+      blog_tags,
+      blog_content,
+      thumbnail,
+      describtion,
+    } = body;
     const publish_time = Moment().format('YYYY-MM-DD HH:mm:ss');
     const read_count = 0;
     const like_count = 0;
@@ -76,6 +94,7 @@ export class BlogService {
           like_count,
           comment_count,
           thumbnail,
+          describtion,
           isDelete
         )
       VALUES
@@ -89,6 +108,7 @@ export class BlogService {
           '${like_count}',
           '${comment_count}',
           '${thumbnail}',
+          '${describtion}',
           '${isDelete}'
         );
     `;

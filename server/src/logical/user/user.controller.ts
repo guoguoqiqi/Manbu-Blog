@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 23:31:12
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 01:33:56
+ * @LastEditTime: 2022-05-03 19:01:31
  */
 import {
   Body,
@@ -19,7 +19,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { ValidationPipe } from 'src/pipe/validation.pipe';
 import { AuthService } from '../auth/auth.service';
-import { RegisterInfoDTO } from './user.dto';
+import { LoginInfoDTO, RegisterInfoDTO } from './user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -45,7 +45,7 @@ export class UserController {
 
   @ApiTags('user')
   @Post('login')
-  async login(@Body() loginParmas: any) {
+  async login(@Body() loginParmas: LoginInfoDTO) {
     const authResult = await this.authService.validateUser(
       loginParmas.username,
       loginParmas.password,

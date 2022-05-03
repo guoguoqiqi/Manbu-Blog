@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 01:14:11
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 02:08:17
+ * @LastEditTime: 2022-05-03 22:15:59
  */
 import {
   Body,
@@ -40,6 +40,7 @@ export class BlogController {
 
   @ApiTags('blog')
   @UsePipes(new ValidationPipe()) // 使用管道验证
+  @UseGuards(AuthGuard('jwt'))
   @Post('publish_blog')
   publishBlog(@Body() body: BlogBodyDto) {
     return this.blogService.publishBlog(body);
@@ -47,6 +48,7 @@ export class BlogController {
 
   @ApiTags('blog')
   @UsePipes(new ValidationPipe()) // 使用管道验证
+  @UseGuards(AuthGuard('jwt'))
   @Post('delete-blog')
   deleteBlog(@Query() query: DeleteBlogDto) {
     return this.blogService.deleteBlog(query);
@@ -54,7 +56,7 @@ export class BlogController {
 
   @ApiTags('blog')
   @UsePipes(new ValidationPipe()) // 使用管道验证
-  @Post('get-blog-detail')
+  @Get('get-blog-detail')
   getBlogDetail(@Query() query: GetBlogDto) {
     return this.blogService.getBlogDetail(query);
   }

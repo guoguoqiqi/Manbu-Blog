@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 00:46:59
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 00:58:18
+ * @LastEditTime: 2022-05-03 19:01:10
  */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
@@ -27,5 +27,15 @@ export class RegisterInfoDTO {
   @IsNotEmpty({ message: '手机号不能为空' })
   readonly mobile: string;
   @ApiProperty()
-  readonly role: string;
+  @IsNotEmpty({ message: '邮箱不能为空' })
+  readonly email: string;
+}
+
+export class LoginInfoDTO {
+  @ApiProperty()
+  @IsNotEmpty({ message: '用户名不能为空' })
+  readonly username: string;
+  @ApiProperty()
+  @IsNotEmpty({ message: '密码不能为空' })
+  readonly password: string;
 }

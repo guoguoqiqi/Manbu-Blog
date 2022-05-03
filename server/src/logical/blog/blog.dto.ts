@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 00:46:59
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 17:21:06
+ * @LastEditTime: 2022-05-02 21:36:57
  */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
@@ -34,6 +34,10 @@ export class BlogBodyDto {
   @ApiProperty()
   @IsNotEmpty({ message: '内容不能为空' })
   readonly blog_content: string;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: '描述不能为空' })
+  readonly describtion: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: '缩略图不能为空' })

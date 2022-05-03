@@ -4,13 +4,14 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 23:30:36
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 14:25:20
+ * @LastEditTime: 2022-05-03 18:17:42
  */
 import { Injectable } from '@nestjs/common';
 import * as Sequelize from 'sequelize';
 import * as Moment from 'moment';
 import sequelize from 'src/database/sequelize';
 import { encryptPassword, makeSalt } from 'src/utils/cryptogram';
+import { RegisterInfoDTO } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -59,7 +60,7 @@ export class UserService {
    * 用户注册
    * @param requestBody
    */
-  async register(requestBody: any): Promise<any> {
+  async register(requestBody: RegisterInfoDTO): Promise<any> {
     const { username, nickname, password, repassword, mobile, email } =
       requestBody;
     if (password !== repassword) {
