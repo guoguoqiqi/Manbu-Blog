@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 21:38:44
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 14:36:53
+ * @LastEditTime: 2022-05-03 23:16:12
  */
 import * as express from 'express';
 import { NestFactory } from '@nestjs/core';
@@ -42,6 +42,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api-doc', app, document);
 
-  await app.listen(5500);
+  await app.listen(5002);
 }
 bootstrap();

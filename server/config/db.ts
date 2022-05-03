@@ -4,14 +4,14 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 22:13:13
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-01 22:26:42
+ * @LastEditTime: 2022-05-04 00:10:34
  */
 
 const productConfig = {
   mysql: {
     port: 3306,
     host: '127.0.0.1',
-    user: 'root1',
+    user: 'root3',
     password: 'root',
     database: 'man_bu_blog', // 库名
     connectionLimit: 10, // 连接限制
