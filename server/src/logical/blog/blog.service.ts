@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 01:13:38
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 15:58:01
+ * @LastEditTime: 2022-05-04 21:29:14
  */
 import { Injectable } from '@nestjs/common';
 import * as Sequelize from 'sequelize';
@@ -113,6 +113,7 @@ export class BlogService {
         );
     `;
     try {
+      console.log('publishBlogSql', publishBlogSql);
       await sequelize.query(publishBlogSql, { logging: true });
       return {
         result: '1',
