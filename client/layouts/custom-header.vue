@@ -52,10 +52,10 @@
       <a-button type="primary" icon="edit" @click="writeArticle">
         写文章
       </a-button>
-      <a-button type="primary" ghost @click="handleLogin" v-if="!isLogin">
+      <a-button type="primary" ghost @click="handleLogin" v-show="!isLogin">
         登录
       </a-button>
-      <a-dropdown v-else :trigger="['click']">
+      <a-dropdown v-show="isLogin" :trigger="['click']">
         <img
           src="https://p3-passport.byteacctimg.com/img/user-avatar/9725017ddc59d2209b92991f5931fbe0~300x300.image"
           alt=""

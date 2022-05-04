@@ -4,10 +4,11 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 21:30:11
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 22:06:05
+ * @LastEditTime: 2022-05-04 22:49:21
  */
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  // mode: "spa",
   head: {
     title: "漫步",
     htmlAttrs: {
@@ -16,7 +17,11 @@ export default {
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "" },
+      {
+        hid: "description",
+        name: "description",
+        content: "漫步博客，web前端，Javascript，Vue，Node，React",
+      },
       { name: "format-detection", content: "telephone=no" },
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
@@ -31,15 +36,15 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    "@/plugins/antd-ui",
-    "~/plugins/axios",
-    "~/plugins/mixins",
+    "~plugins/antd-ui",
+    "~plugins/axios",
+    "~plugins/mixins",
     {
-      src: "~/plugins/router",
+      src: "~plugins/router",
       ssr: false,
     },
     {
-      src: "~/plugins//vueMarkdown.js",
+      src: "~plugins//vueMarkdown.js",
       ssr: false,
     },
   ],

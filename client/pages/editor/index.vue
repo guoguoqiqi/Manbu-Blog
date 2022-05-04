@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 22:35:36
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 22:47:21
+ * @LastEditTime: 2022-05-04 22:51:43
 -->
 <template>
   <div class="editor-box">
@@ -93,11 +93,11 @@
             >
               <img
                 class="face-img"
-                v-if="imageUrl"
+                v-show="imageUrl"
                 :src="imageUrl"
                 alt="文章封面"
               />
-              <div v-else>
+              <div v-show="!imageUrl">
                 <a-icon :type="loading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">Upload</div>
               </div>
@@ -123,7 +123,7 @@
 
 <script>
 import { MessageBox } from "element-ui";
-import { defaultFaceImage } from "~/utils/constants.js";
+import { defaultFaceImage } from "../../utils/constants.js";
 export default {
   name: "home",
   layout: "custom-editor",

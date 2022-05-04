@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 22:54:02
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 22:08:45
+ * @LastEditTime: 2022-05-04 22:48:43
 -->
 
 <template>
@@ -22,7 +22,7 @@
           />
         </div>
         <div class="logo"><img src="~assets/image/logo3.png" alt="" /></div>
-        <div class="login-status" v-if="status === 'login'">
+        <div class="login-status" v-show="status === 'login'">
           <a-input
             placeholder="请输入用户名"
             v-model="loginForm.username"
@@ -50,7 +50,7 @@
           </a-button>
           <a-button size="large" block @click="closeModal"> 访客模式 </a-button>
         </div>
-        <div class="register-status" v-else>
+        <div class="register-status" v-show="status !== 'login'">
           <a-input
             placeholder="请输入用户名"
             v-model="registerForm.username"
