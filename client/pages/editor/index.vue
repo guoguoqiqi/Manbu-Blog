@@ -25,6 +25,7 @@
       <mavon-editor
         ref="md"
         placeholder="请输入文档内容..."
+        :ishljs="true"
         :boxShadow="false"
         style="z-index: 1; border: 1px solid #d9d9d9; height: 100%"
         v-model="content"

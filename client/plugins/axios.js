@@ -12,8 +12,13 @@ import { message } from "ant-design-vue";
 export default ({ app, $axios, store, redirect }, inject) => {
   $axios.defaults.baseURL =
     process.env.NODE_ENV === "development"
-      ? "http://localhost:5002/manbu-blog-v1"
+      ? "http://106.55.228.251:5002/manbu-blog-v1"
       : "http://106.55.228.251:5002/manbu-blog-v1";
+
+  // $axios.defaults.baseURL =
+  // process.env.NODE_ENV === "development"
+  //   ? "http://localhost:5002/manbu-blog-v1"
+  //   : "http://106.55.228.251:5002/manbu-blog-v1";
   $axios.defaults.timeout = 5000;
 
   // 请求拦截
