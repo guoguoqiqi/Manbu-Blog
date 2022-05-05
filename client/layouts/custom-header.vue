@@ -21,20 +21,10 @@
             分类 <a-icon type="down" />
           </span>
           <a-menu slot="overlay">
-            <a-menu-item key="0">
-              <nuxt-link to="/category/Javascript">Javascript</nuxt-link>
-            </a-menu-item>
-            <a-menu-item key="1">
-              <nuxt-link to="/category/Vue">Vue</nuxt-link>
-            </a-menu-item>
-            <a-menu-item key="2">
-              <nuxt-link to="/category/React">React</nuxt-link>
-            </a-menu-item>
-            <a-menu-item key="3">
-              <nuxt-link to="/category/Node">Node</nuxt-link>
-            </a-menu-item>
-            <a-menu-item key="4">
-              <nuxt-link to="/category/Webpack">Webpack</nuxt-link>
+            <a-menu-item :key="category" v-for="category in categories">
+              <nuxt-link :to="'/category/' + category">{{
+                category
+              }}</nuxt-link>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
@@ -45,6 +35,7 @@
         enter-button
         :maxLength="80"
         allowClear
+        @pressEnter="onPressEnter"
         @search="onSearch"
       />
     </div>
@@ -77,14 +68,21 @@
 <script>
 import { mapState } from "vuex";
 import { MessageBox } from "element-ui";
+import { categories } from "../utils/constants";
 
 export default {
   computed: mapState({
     isLogin: (state) => state.auth.token !== "",
   }),
+  data() {
+    return { categories };
+  },
   methods: {
     onSearch(value) {
       this.$router.push("/search?query=" + value);
+    },
+    onPressEnter(e) {
+      this.$router.push("/search?query=" + e.target.value);
     },
     writeArticle() {
       if (!this.isLogin) {

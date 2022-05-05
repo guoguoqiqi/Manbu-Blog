@@ -49,6 +49,7 @@
 <script>
 const PageSize = 10;
 export default {
+  props: ["keyword"],
   data() {
     return {
       articleList: [],
@@ -75,6 +76,7 @@ export default {
       this.loading = true;
       this.$api
         .getArticleList("", {
+          keyword: this.keyword,
           pageIndex: this.pageIndex,
           pageSize: PageSize,
         })

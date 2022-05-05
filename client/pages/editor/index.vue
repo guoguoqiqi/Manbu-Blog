@@ -70,18 +70,13 @@
               ]"
               placeholder="选择文章分类标签"
             >
-              <a-select-option value="Vue"> Vue </a-select-option>
-              <a-select-option value="Javascript"> Javascript </a-select-option>
-              <a-select-option value="React"> React </a-select-option>
-              <a-select-option value="Node"> Node </a-select-option>
-              <a-select-option value="CSS"> CSS </a-select-option>
-              <a-select-option value="HTML"> HTML </a-select-option>
-              <a-select-option value="Nginx"> Nginx </a-select-option>
-              <a-select-option value="算法"> 算法 </a-select-option>
-              <a-select-option value="网络"> 网络 </a-select-option>
-              <a-select-option value="工程化"> 工程化 </a-select-option>
-              <a-select-option value="数据结构"> 数据结构 </a-select-option>
-              <a-select-option value="其他"> 其他 </a-select-option>
+              <a-select-option
+                v-for="category in categories"
+                :value="category"
+                :key="category"
+              >
+                {{ category }}
+              </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item label="封面">
@@ -124,7 +119,7 @@
 
 <script>
 import { MessageBox } from "element-ui";
-import { defaultFaceImage } from "../../utils/constants.js";
+import { defaultFaceImage, categories } from "../../utils/constants.js";
 import { encode64 } from "../../utils/base64.js";
 export default {
   name: "home",
@@ -132,6 +127,7 @@ export default {
   components: {},
   data() {
     return {
+      categories,
       content: "",
       toolbars: {
         bold: true, // 粗体
