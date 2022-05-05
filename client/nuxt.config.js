@@ -42,6 +42,10 @@ export default {
     "~plugins/mixins",
     "~plugins/hightlight",
     {
+      src: "~plugins/infiniteScroll",
+      ssr: false,
+    },
+    {
       src: "~plugins/router",
       ssr: false,
     },

@@ -210,20 +210,16 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           console.info("success");
-
           if (!this.content) {
             this.$message.error("文章内容不能为空");
             return;
           }
-
           this.spinning = true;
-
           try {
             console.log(encode64(this.content), "encode64(this.content)");
           } catch (error) {
             console.log(error);
           }
-
           this.$api
             .publishArticle({
               username: "admin",

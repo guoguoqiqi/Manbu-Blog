@@ -101,7 +101,6 @@ export default {
       let i = document.createElement("i");
       i.setAttribute("class", "el-icon-copy-document hljs-copy");
       i.setAttribute("data-clipboard-action", "copy");
-      console.log(codeDoms, "codeDoms");
       Array.from(codeDoms).forEach((item, index) => {
         let dom = i.cloneNode(false);
         let i_text = document.createTextNode("复制");
@@ -111,7 +110,7 @@ export default {
         let child = item.children[0];
         child.setAttribute("id", "copy" + index);
 
-        // 添加行号
+        // 添加代码行号
         // let num = item.innerText.split("\n").length - 1;
         // let ul = document.createElement("ul");
         // ul.setAttribute("class", "hljs-line-num");
