@@ -21,23 +21,16 @@
             分类 <a-icon type="down" />
           </span>
           <a-menu slot="overlay">
-            <a-menu-item key="0">
-              <nuxt-link to="/Javascript">Javascript</nuxt-link>
-            </a-menu-item>
-            <a-menu-item key="1">
-              <nuxt-link to="/Vue">Vue</nuxt-link>
-            </a-menu-item>
-            <a-menu-item key="2">
-              <nuxt-link to="/React">React</nuxt-link>
-            </a-menu-item>
-            <a-menu-item key="3">
-              <nuxt-link to="/Node">Node</nuxt-link>
-            </a-menu-item>
-            <a-menu-item key="4">
-              <nuxt-link to="/Webpack">Webpack</nuxt-link>
+            <a-menu-item :key="category" v-for="category in categories">
+              <nuxt-link :to="'/category/' + category">{{
+                category
+              }}</nuxt-link>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
+        <a href="https://github.com/guoguoqiqi/Manbu-Blog/" target="_blank"
+          ><a-icon type="github"
+        /></a>
       </div>
       <a-input-search
         class="search-input"
@@ -45,6 +38,7 @@
         enter-button
         :maxLength="80"
         allowClear
+        @pressEnter="onPressEnter"
         @search="onSearch"
       />
     </div>
@@ -77,13 +71,22 @@
 <script>
 import { mapState } from "vuex";
 import { MessageBox } from "element-ui";
+import { categories } from "../utils/constants";
 
 export default {
   computed: mapState({
     isLogin: (state) => state.auth.token !== "",
   }),
+  data() {
+    return { categories };
+  },
   methods: {
-    onSearch() {},
+    onSearch(value) {
+      this.$router.push("/search?query=" + value);
+    },
+    onPressEnter(e) {
+      this.$router.push("/search?query=" + e.target.value);
+    },
     writeArticle() {
       if (!this.isLogin) {
         this.handleLogin();
@@ -118,59 +121,50 @@ export default {
 
 <style scoped lang="less">
 .app-layout-header {
-  background: @navigation;
+  display: flex;
+  z-index: 250;
+  height: 60px;
   border-bottom: 1px solid #f1f1f1;
   color: #909090;
-  height: 60px;
-  z-index: 250;
-  display: flex;
+  background: @navigation;
   justify-content: space-between;
-
   & .logo {
+    display: flex;
     width: 200px;
     height: 100%;
-    display: flex;
     align-items: center;
     justify-content: center;
-
     img {
       height: 36px;
     }
   }
-
   & .navigation {
-    flex: 1;
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: space-between;
-
     & .nav-list a {
-      color: @font-2;
       margin: 0 5px;
-
+      color: @font-2;
       &.nuxt-link-active {
         color: @font-5;
       }
     }
-
     & .ant-dropdown-link {
       color: @font-2;
       cursor: pointer;
     }
-
     & .search-input {
       width: 320px;
     }
   }
-
   & .role {
+    display: flex;
     width: 230px;
     height: 100%;
+    padding-right: 20px;
     align-items: center;
     justify-content: space-around;
-    display: flex;
-    padding-right: 20px;
-
     img {
       width: 40px;
       height: 40px;
@@ -178,4 +172,5 @@ export default {
     }
   }
 }
+
 </style>

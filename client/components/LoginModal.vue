@@ -68,9 +68,8 @@
             :maxLength="20"
           />
           <a-input
-            placeholder="请输入邮箱"
+            placeholder="请输入邮箱（随便填~~）"
             v-model="registerForm.email"
-            type="password"
             :maxLength="20"
           />
           <div class="register-info">
@@ -91,6 +90,7 @@
 <script>
 import { Dialog } from "element-ui";
 import { mapState } from "vuex";
+import { md5EncryHex } from "../utils/md5";
 export default {
   components: {
     "el-dialog": Dialog,
@@ -131,7 +131,7 @@ export default {
       this.loginLoading = true;
       const res = await this.$api.login({
         username: this.loginForm.username,
-        password: this.loginForm.password,
+        password: md5EncryHex(this.loginForm.password),
       });
 
       console.log(res, "res");
@@ -181,8 +181,8 @@ export default {
       const res = await this.$api.register({
         username: this.registerForm.username,
         nickname: this.registerForm.nickname,
-        password: this.registerForm.password,
-        repassword: this.registerForm.password,
+        password: md5EncryHex(this.registerForm.password),
+        repassword: md5EncryHex(this.registerForm.password),
         mobile: "manbu0502",
         email: "manbu@manbu.com",
       });
@@ -194,8 +194,8 @@ export default {
         setTimeout(() => {
           this.status = "login";
           this.loginForm = {
-            username: res.rows.username,
-            password: res.rows.password,
+            username: this.registerForm.username,
+            password: this.registerForm.password,
           };
         }, 1000);
       } else {
@@ -209,69 +209,56 @@ export default {
 /deep/ .el-dialog__header {
   display: none;
 }
-
 /deep/ .el-dialog__footer {
   display: none;
 }
-
 /deep/ .el-dialog__body {
   padding: 0;
 }
-
 .login-box {
-  height: 580px;
   display: flex;
-
+  height: 580px;
   & .face-img {
     width: 500px;
-
     img {
       height: 580px;
     }
   }
-
   & .login-form {
     flex: 1;
-
     .close {
-      height: 30px;
       display: flex;
+      height: 30px;
+      padding-right: 10px;
       align-items: center;
       justify-content: flex-end;
-      padding-right: 10px;
-
       i {
         cursor: pointer;
       }
     }
-
     .logo {
-      margin: 20px 0;
       height: 50px;
+      margin: 20px 0;
       text-align: center;
       img {
         height: 100%;
       }
     }
-
-    .login-status,
-    .register-status {
-      padding: 5px 10px;
-
+    .login-status, .register-status {
+      padding: 5px 20px;
       .register-info {
         text-align: right;
       }
-
       /deep/ .ant-input {
-        height: 50px;
-        border-radius: 2px;
+        height: 45px;
         margin-bottom: 10px;
+        border-radius: 2px;
       }
-
       /deep/ .ant-btn {
         margin-top: 20px;
       }
     }
   }
 }
+
 </style>

@@ -15,17 +15,18 @@
 </template>
 <style scoped>
 #components-back-top-demo-custom .ant-back-top {
-  bottom: 150px;
   right: 50px;
+  bottom: 150px;
 }
 #components-back-top-demo-custom .ant-back-top-inner {
-  height: 40px;
   width: 40px;
-  line-height: 40px;
-  border-radius: 4px;
-  background-color: #1088e9;
-  color: #fff;
-  text-align: center;
+  height: 40px;
   font-size: 20px;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  background-color: #1088e9;
+  border-radius: 4px;
 }
+
 </style>

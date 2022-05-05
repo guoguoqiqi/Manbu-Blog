@@ -25,6 +25,7 @@
       <mavon-editor
         ref="md"
         placeholder="请输入文档内容..."
+        :ishljs="true"
         :boxShadow="false"
         style="z-index: 1; border: 1px solid #d9d9d9; height: 100%"
         v-model="content"
@@ -69,18 +70,13 @@
               ]"
               placeholder="选择文章分类标签"
             >
-              <a-select-option value="Vue"> Vue </a-select-option>
-              <a-select-option value="Javascript"> Javascript </a-select-option>
-              <a-select-option value="React"> React </a-select-option>
-              <a-select-option value="Node"> Node </a-select-option>
-              <a-select-option value="CSS"> CSS </a-select-option>
-              <a-select-option value="HTML"> HTML </a-select-option>
-              <a-select-option value="Nginx"> Nginx </a-select-option>
-              <a-select-option value="算法"> 算法 </a-select-option>
-              <a-select-option value="网络"> 网络 </a-select-option>
-              <a-select-option value="工程化"> 工程化 </a-select-option>
-              <a-select-option value="数据结构"> 数据结构 </a-select-option>
-              <a-select-option value="其他"> 其他 </a-select-option>
+              <a-select-option
+                v-for="category in categories"
+                :value="category"
+                :key="category"
+              >
+                {{ category }}
+              </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item label="封面">
@@ -123,13 +119,15 @@
 
 <script>
 import { MessageBox } from "element-ui";
-import { defaultFaceImage } from "../../utils/constants.js";
+import { defaultFaceImage, categories } from "../../utils/constants.js";
+import { encode64 } from "../../utils/base64.js";
 export default {
   name: "home",
   layout: "custom-editor",
   components: {},
   data() {
     return {
+      categories,
       content: "",
       toolbars: {
         bold: true, // 粗体
@@ -208,20 +206,22 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           console.info("success");
-
           if (!this.content) {
             this.$message.error("文章内容不能为空");
             return;
           }
-
           this.spinning = true;
-
+          try {
+            console.log(encode64(this.content), "encode64(this.content)");
+          } catch (error) {
+            console.log(error);
+          }
           this.$api
             .publishArticle({
               username: "admin",
               blog_title: values.title,
               blog_tags: values.tags,
-              blog_content: this.content,
+              blog_content: encode64(this.content),
               describtion: values.describtion,
               thumbnail: this.imageUrl || defaultFaceImage,
             })
@@ -237,7 +237,8 @@ export default {
                 this.spinning = false;
               }
             })
-            .catch(() => {
+            .catch((err) => {
+              console.log(err);
               this.spinning = false;
             });
         }
@@ -295,42 +296,36 @@ export default {
 <style lang="less" scoped>
 .editor-box {
   height: 100%;
-
   & .header {
-    height: 60px;
-    background-color: #fff;
-    border-bottom: 1px solid #f1f1f1;
     display: flex;
+    height: 60px;
+    border-bottom: 1px solid #f1f1f1;
+    background-color: #fff;
     align-items: center;
-
     .left-box {
-      flex: 1;
       height: 100%;
-      font-size: 24px;
-      font-weight: 500;
-      color: #1d2129;
       border: none;
       outline: none;
+      font-size: 24px;
+      font-weight: 500;
       text-indent: 15px;
-
+      color: #1d2129;
+      flex: 1;
       &.ant-input:focus {
         border: none;
         box-shadow: none;
       }
     }
-
     .right-box {
+      display: flex;
       width: 350px;
       flex-shrink: 0;
-      display: flex;
       justify-content: flex-end;
-
       & .ant-btn {
         margin-right: 20px;
       }
     }
   }
-
   & .content-body {
     height: calc(100vh - 60px);
   }
@@ -339,8 +334,8 @@ export default {
   width: 180px;
   height: 120px;
 }
-
 .face-img {
   height: 120px;
 }
+
 </style>

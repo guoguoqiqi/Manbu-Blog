@@ -32,28 +32,52 @@
           </div>
         </div>
         <div class="article-content">
-          <no-ssr>
-            <mavon-editor
-              :value="content"
-              :subfield="false"
-              :defaultOpen="'preview'"
-              :toolbarsFlag="false"
-              :editable="false"
-              :scrollStyle="true"
-            ></mavon-editor>
-          </no-ssr></div
-      ></a-skeleton>
+          <client-only>
+            <p v-html="$md.render(renderContent)" v-highlight></p>
+          </client-only>
+        </div>
+      </a-skeleton>
+    </div>
+    <div class="comment-main">
+      <p class="comment-title"><span>评论回复</span></p>
+      <div class="comment-box">
+        <mavon-editor
+          ref="md"
+          class="comment-editor"
+          placeholder="请输入评论内容...（支持markdown语法）"
+          :ishljs="true"
+          :boxShadow="false"
+          :subfield="false"
+          :toolbarsFlag="false"
+          :scrollStyle="true"
+          v-model="commentValue"
+        />
+      </div>
+      <div class="bottom-btns">
+        <svg-preview></svg-preview>
+        <a-button type="default">匿名发送</a-button>
+        <a-button type="default">发送</a-button>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import Clipboard from "clipboard";
+import { decode64 } from "../../utils/base64.js";
+import SvgPreview from "../../components/svg/preview.vue";
 export default {
+  components: { SvgPreview },
   watch: {
     $route: {
       handler(val) {
         console.log(val);
       },
       deep: true,
+    },
+  },
+  computed: {
+    renderContent() {
+      return decode64(this.content);
     },
   },
   data() {
@@ -64,10 +88,16 @@ export default {
       content: "",
       readCount: 0,
       loading: true,
+      clipboard: null,
+      commentValue: "",
     };
   },
-  created() {
+  mounted() {
     this.getArticleDetail();
+    setTimeout(() => {
+      this.creatCopyBtn();
+      this.copy();
+    }, 1000);
   },
   methods: {
     async getArticleDetail() {
@@ -90,6 +120,48 @@ export default {
         this.$message.error("未查询到文章");
       }
     },
+    creatCopyBtn() {
+      const codeDoms = document.querySelectorAll("pre");
+      let i = document.createElement("i");
+      i.setAttribute("class", "el-icon-copy-document hljs-copy");
+      i.setAttribute("data-clipboard-action", "copy");
+      Array.from(codeDoms).forEach((item, index) => {
+        let dom = i.cloneNode(false);
+        let i_text = document.createTextNode("复制");
+        dom.appendChild(i_text);
+        dom.setAttribute("data-clipboard-target", "#copy" + index);
+        item.appendChild(dom);
+        let child = item.children[0];
+        child.setAttribute("id", "copy" + index);
+
+        // 添加代码行号
+        // let num = item.innerText.split("\n").length - 1;
+        // let ul = document.createElement("ul");
+        // ul.setAttribute("class", "hljs-line-num");
+        // for (let i = 0; i < num; i++) {
+        //   let n = i + 1;
+        //   let childLi = document.createElement("li");
+        //   let li_text = document.createTextNode(n);
+        //   childLi.appendChild(li_text);
+        //   ul.appendChild(childLi);
+        // }
+        // item.appendChild(ul);
+      });
+    },
+    copy() {
+      this.$nextTick(() => {
+        this.clipboard = new Clipboard(".hljs-copy");
+        this.clipboard.on("success", (e) => {
+          // console.log(e)
+          this.$message.success("复制成功");
+          e.clearSelection(); // 清除文本的选中状态
+        });
+        this.clipboard.on("error", (e) => {
+          this.$message.error("复制失败");
+          e.clearSelection(); // 清除文本的选中状态
+        });
+      });
+    },
   },
 };
 </script>
@@ -97,63 +169,152 @@ export default {
 .content-mian {
   width: 830px;
   min-height: calc(100vh - 50px);
-  background-color: #fff;
   margin: 10px auto 0;
   padding: 20px;
-
+  background-color: #fff;
+  // box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
   & h1.article-title {
     margin: 0 0 20px;
     font-size: 28px;
-    font-weight: 600;
     line-height: 1.31;
+    font-weight: 600;
     color: #252933;
   }
-
   & .author-info-block {
-    height: 60px;
     display: flex;
+    height: 60px;
     align-items: center;
     justify-content: flex-start;
-
     & .avatar-link {
+      display: flex;
       width: 50px;
       flex-shrink: 0;
-      display: flex;
       justify-content: center;
       align-items: center;
-
       img {
         height: 35px;
       }
     }
-
     & .author-info-box {
-      flex: 1;
-
       display: flex;
+      flex: 1;
       flex-direction: column;
       justify-content: space-between;
-
       & .author-name {
         width: 150px;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         font-size: 14px;
         font-weight: 500;
+        white-space: nowrap;
         color: #515767;
+        text-overflow: ellipsis;
       }
-
       & .meta-box {
         color: #8a919f;
       }
     }
   }
-
   & .article-content {
     .v-note-wrapper.markdown-body {
       box-shadow: none !important;
     }
   }
 }
+.comment-main {
+  width: 830px;
+  min-height: 400px;
+  margin: 10px auto 0;
+  padding: 20px;
+  background-color: #fff;
+  // box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+
+  & .comment-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #00323c;
+  }
+  & .comment-box {
+    position: relative;
+    width: 800px;
+    height: 210px;
+    overflow: hidden;
+    margin: 0 auto 10px;
+    padding: 10px 10px 10px 0;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    box-sizing: border-box;
+    .comment-editor {
+      width: 100%;
+      min-height: 200px !important;
+      max-height: 200px !important;
+      border: none;
+    }
+  }
+  & .bottom-btns {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: flex-end;
+    & .ant-btn {
+      margin-left: 10px;
+    }
+    & svg {
+      color: rgba(0, 0, 0, 0.65);
+      opacity: 0.65;
+      cursor: pointer;
+    }
+  }
+}
+
+</style>
+<style lang="less" scoped>
+/deep/ pre {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+  background: #fff;
+  border-radius: 3px;
+  .hljs {
+    display: block;
+    padding: 15px 12px;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 300;
+    color: #333;
+    background: #f8f8f8;
+    word-break: normal;
+    overflow-x: auto;
+  }
+  .hljs-copy {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    line-height: 20px;
+    cursor: pointer;
+  }
+  .hljs-line-num {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 100%;
+    padding: 12px 4px 12px 0;
+    border-right: 1px solid #c3ccd0;
+    font-family: Menlo, monospace;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: right;
+    color: #aaa;
+    background-color: #eee;
+    border-radius: 3px 0 0 3px;
+  }
+  &:hover {
+    cursor: pointer;
+    .hljs-copy {
+      display: inline;
+    }
+  }
+}
+
 </style>

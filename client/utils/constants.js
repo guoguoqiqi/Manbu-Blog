@@ -8,3 +8,18 @@
  */
 
 export const defaultFaceImage = "http://106.55.228.251/logo.png";
+
+export const categories = [
+  "Vue",
+  "Javascript",
+  "React",
+  "Node",
+  "CSS",
+  "HTML",
+  "Nginx",
+  "算法",
+  "网络",
+  "工程化",
+  "数据结构",
+  "其他",
+];
