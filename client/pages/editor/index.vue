@@ -125,6 +125,7 @@
 <script>
 import { MessageBox } from "element-ui";
 import { defaultFaceImage } from "../../utils/constants.js";
+import { encode64 } from "../../utils/base64.js";
 export default {
   name: "home",
   layout: "custom-editor",
@@ -217,12 +218,18 @@ export default {
 
           this.spinning = true;
 
+          try {
+            console.log(encode64(this.content), "encode64(this.content)");
+          } catch (error) {
+            console.log(error);
+          }
+
           this.$api
             .publishArticle({
               username: "admin",
               blog_title: values.title,
               blog_tags: values.tags,
-              blog_content: this.content,
+              blog_content: encode64(this.content),
               describtion: values.describtion,
               thumbnail: this.imageUrl || defaultFaceImage,
             })
@@ -238,7 +245,8 @@ export default {
                 this.spinning = false;
               }
             })
-            .catch(() => {
+            .catch((err) => {
+              console.log(err);
               this.spinning = false;
             });
         }
@@ -296,42 +304,36 @@ export default {
 <style lang="less" scoped>
 .editor-box {
   height: 100%;
-
   & .header {
-    height: 60px;
-    background-color: #fff;
-    border-bottom: 1px solid #f1f1f1;
     display: flex;
+    height: 60px;
+    border-bottom: 1px solid #f1f1f1;
+    background-color: #fff;
     align-items: center;
-
     .left-box {
-      flex: 1;
       height: 100%;
-      font-size: 24px;
-      font-weight: 500;
-      color: #1d2129;
       border: none;
       outline: none;
+      font-size: 24px;
+      font-weight: 500;
       text-indent: 15px;
-
+      color: #1d2129;
+      flex: 1;
       &.ant-input:focus {
         border: none;
         box-shadow: none;
       }
     }
-
     .right-box {
+      display: flex;
       width: 350px;
       flex-shrink: 0;
-      display: flex;
       justify-content: flex-end;
-
       & .ant-btn {
         margin-right: 20px;
       }
     }
   }
-
   & .content-body {
     height: calc(100vh - 60px);
   }
@@ -340,8 +342,8 @@ export default {
   width: 180px;
   height: 120px;
 }
-
 .face-img {
   height: 120px;
 }
+
 </style>

@@ -9,6 +9,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   // mode: "spa",
+  loading: false,
   head: {
     title: "漫步",
     htmlAttrs: {
@@ -39,6 +40,7 @@ export default {
     "~plugins/antd-ui",
     "~plugins/axios",
     "~plugins/mixins",
+    "~plugins/hightlight",
     {
       src: "~plugins/router",
       ssr: false,
@@ -60,6 +62,7 @@ export default {
     "@nuxtjs/style-resources",
     "@nuxtjs/axios",
     "cookie-universal-nuxt",
+    "@nuxtjs/markdownit",
   ],
   styleResources: {
     sass: [],
@@ -72,4 +75,17 @@ export default {
   build: {},
   rootDir: process.cwd(),
   buildDir: process.cwd() + "/.nuxt/",
+  // 根据自己配置
+  markdownit: {
+    preset: "default",
+    linkify: true,
+    breaks: true,
+    use: [
+      "markdown-it-div",
+      "markdown-it-attrs",
+      "markdown-it-highlightjs",
+      "markdown-it-mark",
+      "markdown-it-deflist",
+    ],
+  },
 };

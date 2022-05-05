@@ -11,9 +11,9 @@ import "nprogress/nprogress.css";
 /*全局配置 加载条*/
 NProgress.configure({
   // 动画方式
-  easing: "ease-out-in",
+  easing: "ease",
   // 递增进度条的速度
-  speed: 700,
+  speed: 500,
   // 是否显示加载ico
   showSpinner: false,
   // 自动递增间隔
