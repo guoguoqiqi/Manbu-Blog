@@ -245,12 +245,12 @@ export default {
       }
     }
     .login-status, .register-status {
-      padding: 5px 10px;
+      padding: 5px 20px;
       .register-info {
         text-align: right;
       }
       /deep/ .ant-input {
-        height: 50px;
+        height: 45px;
         margin-bottom: 10px;
         border-radius: 2px;
       }

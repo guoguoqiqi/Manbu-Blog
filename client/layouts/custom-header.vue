@@ -28,6 +28,9 @@
             </a-menu-item>
           </a-menu>
         </a-dropdown>
+        <a href="https://github.com/guoguoqiqi/Manbu-Blog/" target="_blank"
+          ><a-icon type="github"
+        /></a>
       </div>
       <a-input-search
         class="search-input"

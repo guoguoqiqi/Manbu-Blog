@@ -38,12 +38,35 @@
         </div>
       </a-skeleton>
     </div>
+    <div class="comment-main">
+      <p class="comment-title"><span>评论回复</span></p>
+      <div class="comment-box">
+        <mavon-editor
+          ref="md"
+          class="comment-editor"
+          placeholder="请输入评论内容...（支持markdown语法）"
+          :ishljs="true"
+          :boxShadow="false"
+          :subfield="false"
+          :toolbarsFlag="false"
+          :scrollStyle="true"
+          v-model="commentValue"
+        />
+      </div>
+      <div class="bottom-btns">
+        <svg-preview></svg-preview>
+        <a-button type="default">匿名发送</a-button>
+        <a-button type="default">发送</a-button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import Clipboard from "clipboard";
 import { decode64 } from "../../utils/base64.js";
+import SvgPreview from "../../components/svg/preview.vue";
 export default {
+  components: { SvgPreview },
   watch: {
     $route: {
       handler(val) {
@@ -66,6 +89,7 @@ export default {
       readCount: 0,
       loading: true,
       clipboard: null,
+      commentValue: "",
     };
   },
   mounted() {
@@ -148,6 +172,7 @@ export default {
   margin: 10px auto 0;
   padding: 20px;
   background-color: #fff;
+  // box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
   & h1.article-title {
     margin: 0 0 20px;
     font-size: 28px;
@@ -192,6 +217,51 @@ export default {
   & .article-content {
     .v-note-wrapper.markdown-body {
       box-shadow: none !important;
+    }
+  }
+}
+.comment-main {
+  width: 830px;
+  min-height: 400px;
+  margin: 10px auto 0;
+  padding: 20px;
+  background-color: #fff;
+  // box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+
+  & .comment-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #00323c;
+  }
+  & .comment-box {
+    position: relative;
+    width: 800px;
+    height: 210px;
+    overflow: hidden;
+    margin: 0 auto 10px;
+    padding: 10px 10px 10px 0;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    box-sizing: border-box;
+    .comment-editor {
+      width: 100%;
+      min-height: 200px !important;
+      max-height: 200px !important;
+      border: none;
+    }
+  }
+  & .bottom-btns {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: flex-end;
+    & .ant-btn {
+      margin-left: 10px;
+    }
+    & svg {
+      color: rgba(0, 0, 0, 0.65);
+      opacity: 0.65;
+      cursor: pointer;
     }
   }
 }
