@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 21:08:34
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 18:53:52
+ * @LastEditTime: 2022-05-05 22:55:05
  */
 export default {
   login: {
@@ -20,6 +20,11 @@ export default {
   getUserInfo: {
     url: `/user/get-user-info`,
     method: "get",
+    header: {},
+  },
+  updateUserInfo: {
+    url: `/user/update-user-info`,
+    method: "post",
     header: {},
   },
 };

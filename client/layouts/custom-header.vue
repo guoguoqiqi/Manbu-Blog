@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 15:07:42
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 22:58:21
+ * @LastEditTime: 2022-05-05 23:12:11
 -->
 <template>
   <div class="app-layout-header">
@@ -49,9 +49,9 @@
       <a-button type="primary" ghost @click="handleLogin" v-show="!isLogin">
         登录
       </a-button>
-      <a-dropdown v-show="isLogin" :trigger="['click']">
+      <a-dropdown v-show="isLogin" :trigger="['click', 'hover']">
         <img
-          src="https://p3-passport.byteacctimg.com/img/user-avatar/9725017ddc59d2209b92991f5931fbe0~300x300.image"
+          :src="userInfo && userInfo.avator"
           alt=""
           style="cursor: pointer"
         />
@@ -76,6 +76,7 @@ import { categories } from "../utils/constants";
 export default {
   computed: mapState({
     isLogin: (state) => state.auth.token !== "",
+    userInfo: (state) => state.auth.userInfo,
   }),
   data() {
     return { categories };
@@ -99,7 +100,7 @@ export default {
     },
     onAuthMenuClick({ key }) {
       if (key === "self") {
-        console.log("个人中心");
+        this.$router.push("/personal");
       } else if (key === "signout") {
         MessageBox.confirm("退出登录后无法发表文章,是否继续?", "提示", {
           confirmButtonText: "确定",
@@ -172,5 +173,4 @@ export default {
     }
   }
 }
-
 </style>

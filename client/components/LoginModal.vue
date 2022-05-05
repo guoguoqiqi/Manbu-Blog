@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 22:54:02
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-04 22:48:43
+ * @LastEditTime: 2022-05-05 22:15:46
 -->
 
 <template>
@@ -134,8 +134,6 @@ export default {
         password: md5EncryHex(this.loginForm.password),
       });
 
-      console.log(res, "res");
-
       if (res.result === "1") {
         setTimeout(() => {
           this.loginLoading = false;
@@ -144,9 +142,8 @@ export default {
 
           // 将用户信息和token同步到 Vuex 和 cookie
           this.$cookies.set("TOKEN", res.rows.token);
-          this.$cookies.set("USERINFO", {});
           this.$store.commit("auth/SET_TOKEN", res.rows.token);
-          this.$store.commit("auth/SET_USERINFO", {});
+          this.getUserInfo(this.loginForm.username);
         }, 1000);
       } else {
         this.$message.error(res.msg);
@@ -187,8 +184,6 @@ export default {
         email: "manbu@manbu.com",
       });
 
-      console.log(res, "res");
-
       if (res.result === "1") {
         this.$message.success("注册成功，即将前往登录");
         setTimeout(() => {
@@ -200,6 +195,18 @@ export default {
         }, 1000);
       } else {
         this.$message.error(res.msg);
+      }
+    },
+    async getUserInfo(username) {
+      const res = await this.$api.getUserInfo("", {
+        username,
+      });
+
+      if (res.result === "1") {
+        this.$cookies.set("USERINFO", res.rows);
+        this.$store.commit("auth/SET_USERINFO", res.rows);
+      } else {
+        this.$message.error("查询用户信息失败");
       }
     },
   },
@@ -244,7 +251,8 @@ export default {
         height: 100%;
       }
     }
-    .login-status, .register-status {
+    .login-status,
+    .register-status {
       padding: 5px 20px;
       .register-info {
         text-align: right;
@@ -260,5 +268,4 @@ export default {
     }
   }
 }
-
 </style>

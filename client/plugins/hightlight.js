@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: your project
+ * @version: v1.0.0
+ * @Author: GuoQi
+ * @Date: 2022-05-05 21:18:51
+ * @LastEditors: GuoQi
+ * @LastEditTime: 2022-05-05 21:22:05
+ */
 // highlight.js  代码高亮指令
 // import Hljs from 'highlight.js';
 // 代码高亮风格，选择更多风格需导入 node_modules/hightlight.js/styles/ 目录下其它css文件
@@ -13,10 +21,10 @@ hljs.registerLanguage(
 );
 hljs.registerLanguage("dos", require("highlight.js/lib/languages/dos"));
 hljs.registerLanguage("go", require("highlight.js/lib/languages/go"));
-hljs.registerLanguage(
-  "htmlbars",
-  require("highlight.js/lib/languages/htmlbars")
-);
+// hljs.registerLanguage(
+//   "htmlbars",
+//   require("highlight.js/lib/languages/htmlbars")
+// );
 hljs.registerLanguage("http", require("highlight.js/lib/languages/http"));
 hljs.registerLanguage("java", require("highlight.js/lib/languages/java"));
 hljs.registerLanguage(
