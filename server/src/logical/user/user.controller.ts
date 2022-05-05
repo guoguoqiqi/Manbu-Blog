@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 23:31:12
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 19:01:31
+ * @LastEditTime: 2022-05-05 22:53:50
  */
 import {
   Body,
@@ -19,7 +19,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { ValidationPipe } from 'src/pipe/validation.pipe';
 import { AuthService } from '../auth/auth.service';
-import { LoginInfoDTO, RegisterInfoDTO } from './user.dto';
+import {
+  GetUserInfoDTO,
+  LoginInfoDTO,
+  RegisterInfoDTO,
+  UpdateUserInfoDTO,
+} from './user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -30,10 +35,19 @@ export class UserController {
   ) {}
 
   @ApiTags('user')
-  @UseGuards(AuthGuard('jwt'))
+  @UsePipes(new ValidationPipe()) // 使用管道验证
+  // @UseGuards(AuthGuard('jwt'))
   @Get('get-user-info')
-  getUserInfo(@Query() query: any) {
-    return this.userService.getUserInfo(query.id);
+  getUserInfo(@Query() query: GetUserInfoDTO) {
+    return this.userService.getUserInfo(query);
+  }
+
+  @ApiTags('user')
+  @UsePipes(new ValidationPipe()) // 使用管道验证
+  // @UseGuards(AuthGuard('jwt'))
+  @Post('update-user-info')
+  updateUserInfo(@Body() body: UpdateUserInfoDTO) {
+    return this.userService.updateUserInfo(body);
   }
 
   @ApiTags('user')

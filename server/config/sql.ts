@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 22:23:16
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 15:19:13
+ * @LastEditTime: 2022-05-05 21:55:58
  */
 
 // 创建漫步博客数据库 man_bu_blog
@@ -22,6 +22,7 @@ const user = `CREATE TABLE user (
   mobile varchar(15) NOT NULL DEFAULT '0' COMMENT '手机号码',
   role tinyint(4) NOT NULL DEFAULT '2' COMMENT '用户角色: 0-超级管理员|1-管理员|2-普通用户',
   user_status tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态: 0-失效|1-有效|2-删除',
+  avator varchar(200) NOT NULL COMMENT '头像',
   create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (user_id),
   KEY idx_m (username)

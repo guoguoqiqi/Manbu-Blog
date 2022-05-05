@@ -4,22 +4,23 @@
  * @Author: GuoQi
  * @Date: 2022-05-01 23:30:36
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-03 18:17:42
+ * @LastEditTime: 2022-05-05 22:56:59
  */
 import { Injectable } from '@nestjs/common';
 import * as Sequelize from 'sequelize';
 import * as Moment from 'moment';
 import sequelize from 'src/database/sequelize';
 import { encryptPassword, makeSalt } from 'src/utils/cryptogram';
-import { RegisterInfoDTO } from './user.dto';
+import { GetUserInfoDTO, RegisterInfoDTO, UpdateUserInfoDTO } from './user.dto';
+import { defaultAvator } from 'src/utils/constants';
 
 @Injectable()
 export class UserService {
   /**
    * 查询用户信息
-   * @param username
+   * @param requestBody
    */
-  async getUserInfo(username: string): Promise<any | undefined> {
+  async getUserInfo(requestBody: GetUserInfoDTO): Promise<any | undefined> {
     const sql = `
       SELECT
         user_id userid,
@@ -31,11 +32,12 @@ export class UserService {
         mobile,
         role,
         user_status userstatus,
+        avator,
         create_time createtime
       FROM
         user
       WHERE
-        username = '${username}'
+        username = '${requestBody.username}'
     `;
     try {
       const user = (
@@ -57,6 +59,32 @@ export class UserService {
   }
 
   /**
+   * 更新用户信息 目前只能更新昵称和头像
+   * @param requestBody
+   * @returns
+   */
+  async updateUserInfo(requestBody: UpdateUserInfoDTO): Promise<any> {
+    const { username, nickname, avator } = requestBody;
+    const sql = `
+    UPDATE user SET nickname = '${nickname}', avator = '${avator}' WHERE username = '${username}'`;
+
+    try {
+      await sequelize.query(sql, {
+        logging: true, // 是否将 SQL 语句打印到控制台
+      });
+      const newUserInfo = await this.getUserInfo({ username });
+      return {
+        result: '1',
+        rows: newUserInfo.rows,
+        msg: '更新用户信息成功',
+      };
+    } catch (error) {
+      console.error(error);
+      return void 0;
+    }
+  }
+
+  /**
    * 用户注册
    * @param requestBody
    */
@@ -70,7 +98,7 @@ export class UserService {
         msg: '两次密码输入不一致',
       };
     }
-    const user = await this.getUserInfo(username);
+    const user = await this.getUserInfo({ username });
     if (user.rows) {
       return {
         result: '0',
@@ -93,6 +121,7 @@ export class UserService {
           mobile,
           role, 
           user_status,
+          avator,
           create_time
         )
       VALUES
@@ -105,6 +134,7 @@ export class UserService {
           '${mobile}',
           2,
           1,
+          '${defaultAvator}',
           '${create_time}'
         );
     `;

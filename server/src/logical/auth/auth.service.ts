@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 00:18:48
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-02 00:34:53
+ * @LastEditTime: 2022-05-05 21:49:20
  */
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
@@ -21,7 +21,7 @@ export class AuthService {
   // JWT验证 校验用户信息
   async validateUser(username: string, password: string): Promise<any> {
     console.log('JWT验证 - Step 2: 校验用户信息');
-    const result = await this.userService.getUserInfo(username);
+    const result = await this.userService.getUserInfo({ username });
     const user = result.rows;
     if (user) {
       const hashedPassword = user.password;

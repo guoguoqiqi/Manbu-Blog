@@ -4,7 +4,7 @@
  * @Author: GuoQi
  * @Date: 2022-05-02 01:13:38
  * @LastEditors: GuoQi
- * @LastEditTime: 2022-05-04 21:29:14
+ * @LastEditTime: 2022-05-05 23:55:05
  */
 import { Injectable } from '@nestjs/common';
 import * as Sequelize from 'sequelize';
@@ -16,9 +16,11 @@ import {
   DeleteBlogDto,
   GetBlogDto,
 } from './blog.dto';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class BlogService {
+  constructor(private readonly userService: UserService) {}
   /**
    * 获取博客列表
    * @param query
@@ -31,10 +33,10 @@ export class BlogService {
     `;
 
     const getBlogListSql = `
-      SELECT * from blog WHERE isDelete = '0' order by publish_time desc limit ${
+      SELECT *  from blog WHERE isDelete = '0' order by publish_time desc limit ${
         (pageIndex - 1) * pageSize
       },${pageSize} ; 
-    `;
+      `;
 
     try {
       const blogTotal = await sequelize.query(getBlogTotalSql, {
@@ -43,11 +45,31 @@ export class BlogService {
         logging: true, // 是否将 SQL 语句打印到控制台
       });
 
-      const blogList = await sequelize.query(getBlogListSql, {
+      let blogList = await sequelize.query(getBlogListSql, {
         type: Sequelize.QueryTypes.SELECT, // 查询方式
         raw: false, // 是否使用数组组装的方式展示结果
         logging: true, // 是否将 SQL 语句打印到控制台
       });
+
+      const promises = [];
+      for (let i = 0; i < blogList.length; i++) {
+        let blog: any = blogList[i];
+        promises.push(
+          this.userService.getUserInfo({
+            username: blog.username,
+          }),
+        );
+      }
+
+      const userInfos = await Promise.all(promises);
+
+      blogList.forEach((blog: any, index: number) => {
+        blog.author = {
+          nickname: userInfos[index].rows.nickname,
+          avator: userInfos[index].rows.avator,
+        };
+      });
+
       return {
         result: '1',
         rows: blogList,
@@ -113,7 +135,6 @@ export class BlogService {
         );
     `;
     try {
-      console.log('publishBlogSql', publishBlogSql);
       await sequelize.query(publishBlogSql, { logging: true });
       return {
         result: '1',
